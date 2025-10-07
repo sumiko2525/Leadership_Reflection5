@@ -1,3 +1,5 @@
+ini_set('display_errors','1'); error_reporting(E_ALL);
+
 <?php
 // team_trends.php — チーム平均＋各メンバーの7日推移（手順I: RBAC＆team_id対応済み）
 require_once __DIR__ . '/funcs.php';

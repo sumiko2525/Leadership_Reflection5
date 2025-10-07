@@ -1,18 +1,24 @@
 <?php
-// header.php — 固定ヘッダー / 濃ティールグラデ / 右端ハンバーガー / 状態表示
+// header.php — 固定ヘッダー / 濃ティールグラデ / 役割バッジ / 中央ナビ（管理者・リーダーは追加メニュー）/ 右端ハンバーガー
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once __DIR__ . '/funcs.php';
 
 $me = current_user();
 $isLoggedIn = !empty($me['id']);
-$teamName = ''; $displayName = '';
+$role = $me['role'] ?? 'guest';
+$teamName = ''; 
+$displayName = '';
 
 if ($isLoggedIn) {
   try {
     $pdo = db_conn();
-    $st = $pdo->prepare('SELECT name FROM teams WHERE id=:tid');
-    $st->execute([':tid' => $me['team_id']]);
-    $teamName = (string)($st->fetchColumn() ?: '');
+    // チーム名
+    if (!empty($me['team_id'])) {
+      $st = $pdo->prepare('SELECT name FROM teams WHERE id=:tid');
+      $st->execute([':tid' => $me['team_id']]);
+      $teamName = (string)($st->fetchColumn() ?: '');
+    }
+    // 表示名（display_name優先 → email → User#id）
     $su = $pdo->prepare('SELECT COALESCE(NULLIF(display_name,""), email) FROM users WHERE id=:id');
     $su->execute([':id' => $me['id']]);
     $displayName = (string)($su->fetchColumn() ?: ('User#'.$me['id']));
@@ -21,7 +27,9 @@ if ($isLoggedIn) {
 ?>
 <style>
   :root{
-    --hdh: 64px;
+    --hdh: 76px;             /* ヘッダー全体高 */
+    --hd-top: 48px;          /* 上段（ブランド＋状態） */
+    --hd-nav: 28px;          /* 下段（ナビ） */
     --text:#f0fdf4;
     --muted:#cceae4;
     --line:rgba(255,255,255,.18);
@@ -37,17 +45,20 @@ if ($isLoggedIn) {
   }
   .hd-wrap{
     max-width: 1100px; margin: 0 auto; height: 100%;
-    display: flex; align-items: center; gap: 12px;
+    display: grid; grid-template-rows: var(--hd-top) var(--hd-nav);
     padding: 0 16px;
   }
-  .brand{ font-weight: 800; letter-spacing: .02em; }
+  /* 上段：ブランド＋状態 */
+  .hd-top{
+    display:flex; align-items:center; gap:12px;
+  }
+  .brand{ font-weight: 800; letter-spacing: .02em; font-size: 1.12rem; }
   .brand a{ color:#fff; text-decoration:none; }
 
-  /* 右側ブロック：ユーザー情報 + 右端ハンバーガー */
   .right{ margin-left:auto; display:flex; align-items:center; gap:10px; }
   .badge{
     display:inline-block; padding:2px 8px; border-radius:999px;
-    border:1px solid rgba(255,255,255,.35); color:#fff; font-size:12px;
+    border:1px solid rgba(255,255,255,.35); color:#fff; font-size:12px; white-space:nowrap;
   }
   .btn-out{
     padding:6px 10px; border-radius:10px; border:1px solid var(--line);
@@ -65,7 +76,18 @@ if ($isLoggedIn) {
   .menu-btn span{ display:block; width:18px; height:2px; background:#fff;
                   box-shadow:0 6px 0 #fff, 0 -6px 0 #fff; }
 
-  /* メニュー本体（右上ドロップ） */
+  /* 下段：グローバルナビ（中央寄せ） */
+  .quicknav{
+    display:flex; align-items:center; justify-content:center; gap:16px;
+    border-top: 1px solid var(--line);
+  }
+  .quicknav a{
+    color:#ffffff; text-decoration:none; font-size:.92rem; padding:4px 8px; border-radius:8px;
+    border:1px solid transparent;
+  }
+  .quicknav a:hover{ background: rgba(255,255,255,.09); border-color: var(--line); }
+
+  /* ドロップダウンメニュー（右上） */
   .menu{
     position: fixed; top: var(--hdh); right: 12px; width: min(92vw, 320px);
     background: #ffffff; color: #0f172a;
@@ -82,55 +104,77 @@ if ($isLoggedIn) {
   .menu a:hover{ background:#f1f5f9; border-color:#e2e8f0; }
   .menu .sect{ padding:8px 12px; color:#64748b; font-size:12px; }
 
-  /* 狭い幅では右の情報をメニュー内に移す想定で隠す */
+  /* 狭い幅では上段の細要素を隠す（メニューで代替） */
   @media (max-width: 860px){ .right .badge, .right form { display:none; } }
 </style>
 
 <header class="app-hd" role="banner">
   <div class="hd-wrap">
-    <!-- 左上：ブランド名 -->
-    <div class="brand"><a href="dashboard.php">Micro Team Coach</a></div>
+    <!-- 上段：ブランド＋状態 -->
+    <div class="hd-top">
+      <div class="brand"><a href="dashboard.php">Micro Team Coach</a></div>
 
-    <!-- 右端：ユーザー状態 → 最後にハンバーガー -->
-    <div class="right" aria-label="現在の状態とメニュー">
-      <?php if ($isLoggedIn): ?>
-        <span class="badge"><?= h($displayName) ?></span>
-        <span class="badge"><?= h($teamName ?: ('Team #'.$me['team_id'])) ?></span>
-        <span class="badge"><?= h($me['role']) ?></span>
-        <form method="post" action="logout.php" style="margin:0">
-          <?= csrf_field() ?>
-          <button class="btn-out" type="submit">ログアウト</button>
-        </form>
-      <?php else: ?>
-        <a href="login.php" class="badge" style="text-decoration:none;">ログイン</a>
-        <a href="signup.php?new=1" class="badge" style="text-decoration:none;">サインアップ</a>
-      <?php endif; ?>
+      <div class="right" aria-label="現在の状態とメニュー">
+        <?php if ($isLoggedIn): ?>
+          <span class="badge"><?= h($displayName) ?></span>
+          <?php if ($teamName || !empty($me['team_id'])): ?>
+            <span class="badge"><?= h($teamName ?: ('Team #'.$me['team_id'])) ?></span>
+          <?php endif; ?>
+          <span class="badge">
+            <?= ($role==='admin' ? '管理者' : ($role==='leader' ? 'リーダー' : 'メンバー')) ?>
+          </span>
+          <form method="post" action="logout.php" style="margin:0">
+            <?= csrf_field() ?>
+            <button class="btn-out" type="submit">ログアウト</button>
+          </form>
+        <?php else: ?>
+          <a href="login.php" class="badge" style="text-decoration:none;">ログイン</a>
+          <a href="signup.php?new=1" class="badge" style="text-decoration:none;">サインアップ</a>
+        <?php endif; ?>
 
-      <!-- 右端ハンバーガー -->
-      <button class="menu-btn" id="menuBtn" aria-controls="appMenu" aria-expanded="false" aria-label="メニューを開く">
-        <span aria-hidden="true"></span>
-      </button>
+        <!-- 右端ハンバーガー -->
+        <button class="menu-btn" id="menuBtn" aria-controls="appMenu" aria-expanded="false" aria-label="メニューを開く">
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
     </div>
+
+    <!-- 下段：中央ナビ（管理者・リーダーで項目追加） -->
+    <nav class="quicknav" aria-label="グローバルナビゲーション">
+      <a href="dashboard.php">ダッシュボード</a>
+      <a href="daily.php">Checkin</a>
+      <a href="checkout.php">Checkout</a>
+      <a href="sos.php">Quick SOS</a>
+      <?php // 感謝ログのファイル名は thanks.php / gratitude.php どちらでも想定。存在に合わせて調整してください。 ?>
+      <a href="thanks.php">感謝ログ</a>
+      <a href="history.php">SOS履歴</a>
+      <?php if (in_array($role, ['admin','leader'])): ?>
+        <a href="team_week.php">チーム7日一覧</a>
+      <?php endif; ?>
+    </nav>
   </div>
 </header>
 
-<!-- ドロップダウンメニュー -->
+<!-- ドロップダウンメニュー（ハンバーガー：スマホ/補助導線） -->
 <nav id="appMenu" class="menu" role="navigation" aria-label="メインメニュー">
   <div class="sect">メニュー</div>
   <ul>
-    <li><a href="dashboard.php">Dashboard</a></li>
+    <li><a href="dashboard.php">ダッシュボード</a></li>
     <li><a href="daily.php">Checkin</a></li>
     <li><a href="checkout.php">Checkout</a></li>
-    <li><a href="sos.php">QuickSOS</a></li>
-    <li><a href="thanks.php">Thanks history</a></li>
-    <li><a href="history.php">SOS history</a></li>
+    <li><a href="sos.php">Quick SOS</a></li>   
+    <li><a href="thanks.php">感謝ログ</a></li>
+    <li><a href="history.php">SOS履歴</a></li>
+    <?php if (in_array($role, ['admin','leader'])): ?>
+      <li><a href="team_week.php">チーム7日一覧</a></li>
+    <?php endif; ?>
   </ul>
 
   <?php if ($isLoggedIn): ?>
     <div class="sect">現在のユーザー</div>
     <ul>
       <li><a href="javascript:void(0)"><?= h($displayName) ?></a></li>
-      <li><a href="javascript:void(0)"><?= h($teamName ?: ('Team #'.$me['team_id'])) ?> / <?= h($me['role']) ?></a></li>
+      <li><a href="javascript:void(0)"><?= h($teamName ?: ('Team #'.$me['team_id'])) ?> / <?= ($role==='admin'?'管理者':($role==='leader'?'リーダー':'メンバー')) ?></a></li>
       <li>
         <form method="post" action="logout.php" style="margin:6px 12px 12px">
           <?= csrf_field() ?>
