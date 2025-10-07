@@ -20,7 +20,7 @@
 ---
 
 ## ③ アプリのデプロイURL
-🔗 [https://leadership.sakura.ne.jp/microteam/login.php](https://leadership.sakura.ne.jp/microteam/login.php)
+🔗https://leadership.sakura.ne.jp/Leadership_Reflection5/login.php
 
 ---
 
