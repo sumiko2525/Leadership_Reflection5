@@ -6,7 +6,7 @@ require_once __DIR__ . '/funcs.php';
 $me = current_user();
 $isLoggedIn = !empty($me['id']);
 $role = $me['role'] ?? 'guest';
-$teamName = ''; 
+$teamName = '';
 $displayName = '';
 
 if ($isLoggedIn) {
@@ -24,6 +24,13 @@ if ($isLoggedIn) {
     $displayName = (string)($su->fetchColumn() ?: ('User#'.$me['id']));
   } catch (Throwable $e) { /* 表示優先 */ }
 }
+
+// 現在ページのアクティブ表示用（下線＋太字）
+$here = basename($_SERVER['SCRIPT_NAME'] ?? '');
+function nav_active(string $file): string {
+  global $here;
+  return $here === $file ? 'style="text-decoration:underline;font-weight:bold;"' : '';
+}
 ?>
 <style>
   :root{
@@ -35,7 +42,6 @@ if ($isLoggedIn) {
     --line:rgba(255,255,255,.18);
     --brand:#0f766e; --brand-600:#0d9488;
   }
-  /* 本文が隠れないように */
   body{ padding-top: var(--hdh); }
 
   .app-hd{
@@ -48,10 +54,8 @@ if ($isLoggedIn) {
     display: grid; grid-template-rows: var(--hd-top) var(--hd-nav);
     padding: 0 16px;
   }
-  /* 上段：ブランド＋状態 */
-  .hd-top{
-    display:flex; align-items:center; gap:12px;
-  }
+
+  .hd-top{ display:flex; align-items:center; gap:12px; }
   .brand{ font-weight: 800; letter-spacing: .02em; font-size: 1.12rem; }
   .brand a{ color:#fff; text-decoration:none; }
 
@@ -76,7 +80,6 @@ if ($isLoggedIn) {
   .menu-btn span{ display:block; width:18px; height:2px; background:#fff;
                   box-shadow:0 6px 0 #fff, 0 -6px 0 #fff; }
 
-  /* 下段：グローバルナビ（中央寄せ） */
   .quicknav{
     display:flex; align-items:center; justify-content:center; gap:16px;
     border-top: 1px solid var(--line);
@@ -87,7 +90,6 @@ if ($isLoggedIn) {
   }
   .quicknav a:hover{ background: rgba(255,255,255,.09); border-color: var(--line); }
 
-  /* ドロップダウンメニュー（右上） */
   .menu{
     position: fixed; top: var(--hdh); right: 12px; width: min(92vw, 320px);
     background: #ffffff; color: #0f172a;
@@ -104,7 +106,6 @@ if ($isLoggedIn) {
   .menu a:hover{ background:#f1f5f9; border-color:#e2e8f0; }
   .menu .sect{ padding:8px 12px; color:#64748b; font-size:12px; }
 
-  /* 狭い幅では上段の細要素を隠す（メニューで代替） */
   @media (max-width: 860px){ .right .badge, .right form { display:none; } }
 </style>
 
@@ -141,15 +142,15 @@ if ($isLoggedIn) {
 
     <!-- 下段：中央ナビ（管理者・リーダーで項目追加） -->
     <nav class="quicknav" aria-label="グローバルナビゲーション">
-      <a href="dashboard.php">ダッシュボード</a>
-      <a href="daily.php">Checkin</a>
-      <a href="checkout.php">Checkout</a>
-      <a href="sos.php">Quick SOS</a>
-      <?php // 感謝ログのファイル名は thanks.php / gratitude.php どちらでも想定。存在に合わせて調整してください。 ?>
-      <a href="thanks.php">感謝ログ</a>
-      <a href="history.php">SOS履歴</a>
+      <a href="dashboard.php" <?=nav_active('dashboard.php')?>>ダッシュボード</a>
+      <a href="daily.php" <?=nav_active('daily.php')?>>Checkin</a>
+      <a href="checkout.php" <?=nav_active('checkout.php')?>>Checkout</a>
+      <a href="sos.php" <?=nav_active('sos.php')?>>Quick SOS</a>
+      <a href="thanks.php" <?=nav_active('thanks.php')?>>感謝ログ</a>
+      <a href="history.php" <?=nav_active('history.php')?>>SOS履歴</a>
       <?php if (in_array($role, ['admin','leader'])): ?>
-        <a href="team_week.php">チーム7日一覧</a>
+        <a href="team_week.php" <?=nav_active('team_week.php')?>>活動ログ一覧</a>
+        <a href="team_trends.php" <?=nav_active('team_trends.php')?>>チーム推移グラフ</a>
       <?php endif; ?>
     </nav>
   </div>
@@ -159,14 +160,17 @@ if ($isLoggedIn) {
 <nav id="appMenu" class="menu" role="navigation" aria-label="メインメニュー">
   <div class="sect">メニュー</div>
   <ul>
-    <li><a href="dashboard.php">ダッシュボード</a></li>
-    <li><a href="daily.php">Checkin</a></li>
-    <li><a href="checkout.php">Checkout</a></li>
-    <li><a href="sos.php">Quick SOS</a></li>   
-    <li><a href="thanks.php">感謝ログ</a></li>
-    <li><a href="history.php">SOS履歴</a></li>
+    <li><a href="dashboard.php" <?=nav_active('dashboard.php')?>>ダッシュボード</a></li>
+    <li><a href="daily.php" <?=nav_active('daily.php')?>>Checkin</a></li>
+    <li><a href="checkout.php" <?=nav_active('checkout.php')?>>Checkout</a></li>
+    <li><a href="sos.php" <?=nav_active('sos.php')?>>Quick SOS</a></li>
+    <li><a href="thanks.php" <?=nav_active('thanks.php')?>>感謝ログ</a></li>
+    <li><a href="history.php" <?=nav_active('history.php')?>>SOS履歴</a></li>
+
     <?php if (in_array($role, ['admin','leader'])): ?>
-      <li><a href="team_week.php">チーム7日一覧</a></li>
+      <li class="sect">チーム分析</li>
+      <li><a href="team_week.php" <?=nav_active('team_week.php')?>>活動ログ一覧</a></li>
+      <li><a href="team_trends.php" <?=nav_active('team_trends.php')?>>チーム推移グラフ</a></li>
     <?php endif; ?>
   </ul>
 

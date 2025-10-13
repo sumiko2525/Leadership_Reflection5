@@ -1,0 +1,46 @@
+[11-Oct-2025 17:18:53 Asia/Tokyo] PHP Fatal error:  Uncaught Error: Failed opening required '/home/leadership/www/Leadership_Reflection5/api/../lib/funcs.php' (include_path='.:/usr/local/php/8.2/lib/php') in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php on line 15
+[11-Oct-2025 17:20:14 Asia/Tokyo] PHP Fatal error:  Uncaught Error: Failed opening required '/home/leadership/www/Leadership_Reflection5/api/../lib/funcs.php' (include_path='.:/usr/local/php/8.2/lib/php') in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php on line 15
+[11-Oct-2025 17:20:54 Asia/Tokyo] PHP Fatal error:  Uncaught Error: Failed opening required '/home/leadership/www/Leadership_Reflection5/api/../lib/funcs.php' (include_path='.:/usr/local/php/8.2/lib/php') in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php on line 15
+[11-Oct-2025 17:20:56 Asia/Tokyo] PHP Fatal error:  Uncaught Error: Failed opening required '/home/leadership/www/Leadership_Reflection5/api/../lib/funcs.php' (include_path='.:/usr/local/php/8.2/lib/php') in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php on line 15
+[11-Oct-2025 17:21:16 Asia/Tokyo] PHP Fatal error:  Uncaught Error: Failed opening required '/home/leadership/www/Leadership_Reflection5/api/../lib/funcs.php' (include_path='.:/usr/local/php/8.2/lib/php') in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php on line 15
+[11-Oct-2025 17:21:18 Asia/Tokyo] PHP Fatal error:  Uncaught Error: Failed opening required '/home/leadership/www/Leadership_Reflection5/api/../lib/funcs.php' (include_path='.:/usr/local/php/8.2/lib/php') in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php on line 15
+[11-Oct-2025 17:21:47 Asia/Tokyo] PHP Fatal error:  Uncaught Error: Failed opening required '/home/leadership/www/Leadership_Reflection5/api/../lib/funcs.php' (include_path='.:/usr/local/php/8.2/lib/php') in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php on line 15
+[11-Oct-2025 17:22:08 Asia/Tokyo] PHP Fatal error:  Uncaught Error: Failed opening required '/home/leadership/www/Leadership_Reflection5/api/../lib/funcs.php' (include_path='.:/usr/local/php/8.2/lib/php') in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php on line 15
+[11-Oct-2025 17:47:16 Asia/Tokyo] PHP Fatal error:  Uncaught Error: Failed opening required '/home/leadership/www/Leadership_Reflection5/api/../lib/funcs.php' (include_path='.:/usr/local/php/8.2/lib/php') in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php on line 15
+[11-Oct-2025 17:47:18 Asia/Tokyo] PHP Fatal error:  Uncaught Error: Failed opening required '/home/leadership/www/Leadership_Reflection5/api/../lib/funcs.php' (include_path='.:/usr/local/php/8.2/lib/php') in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php:15
+Stack trace:
+#0 {main}
+  thrown in /home/leadership/www/Leadership_Reflection5/api/ai_sos.php on line 15
+[11-Oct-2025 18:31:19 Asia/Tokyo] ai_calls insert error: SQLSTATE[HY000]: General error: 1364 Field 'prompt_hash' doesn't have a default value
+[11-Oct-2025 19:45:38 Asia/Tokyo] ai_calls insert error: SQLSTATE[HY000]: General error: 1364 Field 'prompt_hash' doesn't have a default value
+[11-Oct-2025 20:01:59 Asia/Tokyo] ai_calls insert error: SQLSTATE[HY000]: General error: 1364 Field 'prompt_hash' doesn't have a default value
+[11-Oct-2025 20:42:12 Asia/Tokyo] ai_calls insert error: SQLSTATE[22003]: Numeric value out of range: 1264 Out of range value for column 'team_id' at row 1
+[11-Oct-2025 20:42:59 Asia/Tokyo] ai_calls insert error: SQLSTATE[22003]: Numeric value out of range: 1264 Out of range value for column 'team_id' at row 1
+[11-Oct-2025 20:49:52 Asia/Tokyo] ai_calls insert error: SQLSTATE[22003]: Numeric value out of range: 1264 Out of range value for column 'team_id' at row 1
